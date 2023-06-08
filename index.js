@@ -11,7 +11,6 @@ var corsOptions = {
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
-// app.use(cors());
 app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
@@ -46,7 +45,7 @@ app.get('/members', (req, res) => {
     );
 })
 
-app.post('/postMembers', cors(), (req, res) => {
+app.post('/postMembers', cors(corsOptions), (req, res) => {
     // res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app');
 
     const { member_name, member_phone, member_idcard } = req.body;
