@@ -166,32 +166,32 @@ app.get('/requisition', async (req,res) => {
 })
 
 app.post('/postRequisition', async (req,res) => {
-      try {
-        const { date, name, nameitim, typeitim, quantity } = req.body;
+    const { date, name, nameitim, typeitim, quantity } = req.body;
 
-        if (!date || name || nameitim || typeitim || quantity) {
-            res.status(400).json({ message: 'Invalid request data' });
-            return;
-        }
+    if (!date || name || nameitim || typeitim || quantity) {
+        res.status(400).json({ message: 'Invalid request data' });
+        return;
+    }
 
+    try {
         await new Promise((resolve, reject) => {
-          dreamitim.query(
+            dreamitim.query(
             'INSERT INTO `requisition` (`date`,`name`,`nameitim`,`typeitim`,`quantity`) VALUES (?, ?, ?, ?, ?)',
             [date, name, nameitim, typeitim, quantity],
             function (err, results, fields) {
-              if (err) {
+                if (err) {
                 reject(err);
-              } else {
+                } else {
                 resolve(results);
-              }
+                }
             }
-          );
+            );
         });
         res.status(200).json({ message: 'Add Quantity Success' });
-      } catch (error) {
+        } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error' });
-      }
+        }
 })
 
 app.put('/putRequisition', (req, res) => {
