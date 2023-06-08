@@ -46,7 +46,8 @@ app.get('/members', (req, res) => {
 })
 
 app.post('/postMembers', cors(corsOptions), (req, res) => {
-    // res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app');
+    
+    res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app');
 
     const { member_name, member_phone, member_idcard } = req.body;
 
