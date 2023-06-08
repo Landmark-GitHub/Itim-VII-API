@@ -9,7 +9,8 @@ const dreamitim = mysql.createPool(process.env.DATABASE_URL)
 
 // app.use(cors());
 app.use(cors({
-    origin: 'https://itim-vii.vercel.app'
+    origin: 'https://itim-vii.vercel.app',
+    optionsSuccessStatus: 200
 }));
 
 app.get('/', (req, res) => {
