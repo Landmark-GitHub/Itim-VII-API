@@ -40,6 +40,26 @@ app.get('/members', (req, res) => {
     );
 })
 
+app.post('/members', (req, res) => {
+    const { member_name, member_phone, member_idcard } = req.body;
+    // insert a new member
+    dreamitim.query(
+      'INSERT INTO `member` (`member_name`, `member_phone`, `member_idcard`) VALUES (?, ?, ?)',
+      [member_name, member_phone, member_idcard],
+      function (err, results, fields) {
+        if (err) {
+          console.error(err);
+          res.status(500).json({ message: 'Error' });
+          return;
+        } else {
+          console.log(results);
+          res.status(200).json({ message: 'Add Member Success' });
+        }
+
+      }
+    );
+})
+
 app.get('/requisition', async (req,res) => {
     const { date, name } = req.query;
     let query = 'SELECT * FROM `requisition`';
@@ -83,48 +103,6 @@ app.get('/requisition', async (req,res) => {
     }
 
 })
-
-// app.get('/requisition', async (req, res) => {
-//     const { date, name } = req.query;
-//     let query = 'SELECT * FROM `requisition`';
-  
-//     if (date && name) {
-//       query += ' WHERE `date` = ? AND `name` = ?';
-//     } else if (date) {
-//       query += ' WHERE `date` = ?';
-//     } else if (name) {
-//       query += ' WHERE `name` = ?';
-//     }
-  
-//     try {
-//       await new Promise((resolve, reject) => {
-//         dreamitim.query(
-//           query,
-//           [date, name],
-//           function (err, results, fields) {
-//             if (err) {
-//               reject(err);
-//             } else {
-//               const formattedResults = results.map((result) => ({
-//                 id: result.id,
-//                 date: result.date,
-//                 name: result.name,
-//                 nameitim: decodeURIComponent(result.nameitim),
-//                 typeitim: result.typeitim,
-//                 quantity: result.quantity,
-//               }));
-  
-//               res.status(200).json(formattedResults);
-//               resolve();
-//             }
-//           }
-//         );
-//       });
-//     } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ message: 'Error' });
-//     }
-// });
 
 app.listen(process.env.PORT || 3000);
 // dreamitim.end()
