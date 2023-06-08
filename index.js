@@ -7,7 +7,7 @@ const app = express();
 const dreamitim = mysql.createPool(process.env.DATABASE_URL)
 
 var corsOptions = {
-    origin: 'https://itim-vii.vercel.app',
+    origin: '*',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
@@ -46,8 +46,8 @@ app.get('/members', (req, res) => {
 })
 
 app.post('/postMembers', cors(corsOptions), (req, res) => {
-    
-    res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app');
+
+    //res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app');
 
     const { member_name, member_phone, member_idcard } = req.body;
 
