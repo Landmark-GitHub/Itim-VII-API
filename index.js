@@ -197,7 +197,7 @@ app.post('/postRequisition', async (req,res) => {
 app.put('/putRequisition', (req, res) => {
     const { date, name, nameitim, quantity } = req.body;
 
-    if (date || name || nameitim || quantity) {
+    if (!date || !name || !nameitim || !quantity) {
         res.status(400).json({ message: 'Invalid request data' });
         return;
     }
