@@ -8,12 +8,6 @@ const dreamitim = mysql.createPool(process.env.DATABASE_URL)
 
 
 app.use(cors());
-// app.use((req, res, next) => {
-//     res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app'); // แทนที่ด้วยโดเมนของเว็บไซต์ที่เรียก API จริง
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-//     next();
-// });
 
 app.get('/', (req, res) => {
     res.send('Welcome to DreamItim API')
@@ -47,7 +41,7 @@ app.get('/members', (req, res) => {
     );
 })
 
-app.post('/members', (req, res) => {
+app.post('/postMembers', (req, res) => {
     const { member_name, member_phone, member_idcard } = req.body;
 
     dreamitim.query(
@@ -77,6 +71,7 @@ app.get('/requisition', async (req,res) => {
     } else if (name) {
         query += ' WHERE `name` = ?';
     }
+
     //http://localhost:3000/requisition?date=2023-05-16&name=Rohit
 
     try {
