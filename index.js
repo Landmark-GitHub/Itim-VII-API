@@ -20,7 +20,7 @@ app.get('/itim', (req, res) => {
                 console.error(err);
                 res.status(500).send('Error retrieving data from the database table itim');
             } else {
-                res.send(results);
+                res.status(200).json(results);
             }
         }
       );
