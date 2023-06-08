@@ -217,6 +217,27 @@ app.put('/putRequisition', (req, res) => {
     );
 })
 
-app.get('/itimOld')
+app.get('/typesItim', (req, res) => {
+    const {date, name, typeitim} = req.query;
+  
+    let query = 'SELECT ';
+
+    if (date && name && typeitim) {
+      query += 'name, typeItim, SUM(quantity) AS total_quantity FROM `requisition` WHERE `date` = ? AND `name` = ? AND `typeitim` = ?';
+    } else if (date && name) {
+      query += 'name, typeItim, SUM(quantity) AS total_quantity FROM `requisition` WHERE `date` = ? AND `name` = ? GROUP BY `typeitim`';
+    } else if (date) {
+      query += 'name, typeItim, SUM(quantity) AS total_quantity FROM `requisition` WHERE `date` = ? GROUP BY `name`, `typeitim`';
+    }
+  
+    dreamitim.query(query, [date, name, typeitim], function (err, results, fields) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal Server Error', date, name, typeitim });
+      }
+      const formattedResults = JSON.stringify(results, null, 2); // Format the JSON response
+      return res.send(formattedResults);
+    });
+})
 
 app.listen(process.env.PORT || 3001);
