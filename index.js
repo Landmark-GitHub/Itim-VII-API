@@ -241,8 +241,8 @@ app.get('/typesItim', (req, res) => {
 })
 
 app.get('/newItim', (req, res) => {
-    const { params } = req.query;
-    const [date, name, typeitim] = params;
+    // const { params } = req.query;
+    const {date, name, typeitim} = req.query;
   
     let query = 'SELECT ';
   
