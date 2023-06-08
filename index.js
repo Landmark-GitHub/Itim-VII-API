@@ -40,24 +40,25 @@ app.get('/members', (req, res) => {
     );
 })
 
-app.post('/members', (req, res, next) => {
+app.post('/members', (req, res) => {
     const { member_name, member_phone, member_idcard } = req.body;
-    // insert a new member
-    dreamitim.query(
-      'INSERT INTO `member` (`member_name`, `member_phone`, `member_idcard`) VALUES (?, ?, ?)',
-      [member_name, member_phone, member_idcard],
-      function (err, results, fields) {
-        if (err) {
-          console.error(err);
-          res.status(500).json({ message: 'Error' });
-          return;
-        } else {
-          console.log(results);
-          res.status(200).json({ message: 'Add Member Success' });
-        }
-      }
-    );
-    next();
+
+    console.log(member_name);
+
+    // dreamitim.query(
+    //   'INSERT INTO `member` (`member_name`, `member_phone`, `member_idcard`) VALUES (?, ?, ?)',
+    //   [member_name, member_phone, member_idcard],
+    //   function (err, results, fields) {
+    //     if (err) {
+    //       console.error(err);
+    //       res.status(500).json({ message: 'Error' });
+    //       return;
+    //     } else {
+    //       console.log(results);
+    //       res.status(200).json({ message: 'Add Member Success' });
+    //     }
+    //   }
+    // );
 })
 
 app.get('/requisition', async (req,res) => {
@@ -104,5 +105,5 @@ app.get('/requisition', async (req,res) => {
 
 })
 
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3001);
 // dreamitim.end()
