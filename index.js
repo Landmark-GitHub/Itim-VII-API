@@ -8,10 +8,7 @@ const dreamitim = mysql.createPool(process.env.DATABASE_URL)
 
 
 // app.use(cors());
-app.use(cors({
-    origin: 'https://itim-vii.vercel.app',
-    optionsSuccessStatus: 200
-}));
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.send('Welcome to DreamItim API')
@@ -64,7 +61,7 @@ app.get('/members', (req, res) => {
 //     );
 // })
 
-app.post('/postMembers', (req, res) => {
+app.post('/postMembers', cors(), (req, res) => {
     const { member_name, member_phone, member_idcard } = req.body;
 
     dreamitim.query(
@@ -77,7 +74,6 @@ app.post('/postMembers', (req, res) => {
                 return;
             } else {
                 console.log(results);
-                res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app');
                 res.status(200).json({ message: 'Add Member Success' });
             }
         }
