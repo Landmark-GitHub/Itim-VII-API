@@ -7,7 +7,7 @@ const app = express();
 const dreamitim = mysql.createPool(process.env.DATABASE_URL)
 
 var corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: 'https://itim-vii.vercel.app',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
