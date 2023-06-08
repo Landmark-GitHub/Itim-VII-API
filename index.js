@@ -47,9 +47,7 @@ app.get('/members', (req, res) => {
 })
 
 app.post('/postMembers', (req, res) => {
-
     //res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app');
-
     const { member_name, member_phone, member_idcard } = req.body;
 
     if (!member_name || !member_phone || !member_idcard) {
@@ -73,6 +71,53 @@ app.post('/postMembers', (req, res) => {
             // res.status(200).json({ message: 'Add Member Success' });
         }
     );
+});
+
+app.put('/putMembers', (req, res) => {
+    const { member_id, member_name, member_phone, member_idcard } = req.body;
+
+    if (!member_id || !member_name || !member_phone || !member_idcard) {
+        res.status(400).json({ message: 'Invalid request data' });
+        return;
+    }
+
+    dreamitim.query(
+      'UPDATE `member` SET `member_name` = ?, `member_phone` = ?, `member_idcard` = ? WHERE `member_id` = ?',
+      [member_name, member_phone, member_idcard, member_id],
+      function (err, results, fields) {
+        if (err) {
+          console.error(err);
+          res.status(500).json({ message: 'Error' });
+          return;
+        }
+        console.log(results);
+        res.status(200).json({ message: 'Update Member Success' });
+      }
+    );
+})
+
+app.delete('/deleteMember/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await new Promise((resolve, reject) => {
+            dreamitim.query(
+                'DELETE FROM `member` WHERE `member_id` = ?',
+                [id],
+                function (err, results, fields) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        console.log(results);
+                        resolve();
+                    }
+                }
+            );
+        });
+        res.status(200).json({ message: 'Delete Member Success' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error' });
+    }
 });
 
 app.get('/requisition', async (req,res) => {
@@ -120,5 +165,57 @@ app.get('/requisition', async (req,res) => {
 
 })
 
+app.post('/postRequisition', (req,res) => {
+    try {
+        const { date, name, nameitim, typeitim, quantity } = req.body;
+
+        if (!date || name || nameitim || typeitim || quantity) {
+            res.status(400).json({ message: 'Invalid request data' });
+            return;
+        }
+
+        dreamitim.query(
+            'INSERT INTO `requisition` (`date`,`name`,`nameitim`,`typeitim`,`quantity`) VALUES (?, ?, ?, ?, ?)',
+            [date, name, nameitim, typeitim, quantity],
+            function (err, results, fields) {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(results);
+              }
+            }
+          );
+
+        res.status(200).json({ message: 'Add Quantity Success' });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error' });
+      }
+})
+
+app.put('/putRequisition', (req, res) => {
+    const { date, name, nameitim, quantity } = req.body;
+
+    if (date || name || nameitim || quantity) {
+        res.status(400).json({ message: 'Invalid request data' });
+        return;
+    }
+
+    dreamitim.query(
+        'UPDATE `requisition` SET `quantity` = ? WHERE `date` = ? AND `name` = ? AND `nameItim` = ?',
+        [quantity, date, name, nameitim],
+        function (err, results, fields) {
+            if (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Error' });
+            return;
+            }
+            console.log(results);
+            res.status(200).json({ message: 'Update Member Success' });
+        }
+    );
+})
+
+app.get('/itimOld')
+
 app.listen(process.env.PORT || 3001);
-// dreamitim.end()
