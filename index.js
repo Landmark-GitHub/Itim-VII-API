@@ -8,10 +8,11 @@ const dreamitim = mysql.createPool(process.env.DATABASE_URL)
 
 var corsOptions = {
     origin: '*',
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+    optionsSuccessStatus: 200
 }
 
 app.use(cors(corsOptions));
+app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Welcome to DreamItim API')
@@ -45,11 +46,16 @@ app.get('/members', (req, res) => {
     );
 })
 
-app.post('/postMembers', cors(corsOptions), (req, res) => {
+app.post('/postMembers', (req, res) => {
 
     //res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app');
 
     const { member_name, member_phone, member_idcard } = req.body;
+
+    if (!member_name || !member_phone || !member_idcard) {
+        res.status(400).json({ message: 'Invalid request data' });
+        return;
+    }
 
     dreamitim.query(
         'INSERT INTO `member` (`member_name`, `member_phone`, `member_idcard`) VALUES (?, ?, ?)',
