@@ -40,7 +40,7 @@ app.get('/members', (req, res) => {
     );
 })
 
-app.post('/members', (req, res) => {
+app.post('/members', (req, res, next) => {
     const { member_name, member_phone, member_idcard } = req.body;
     // insert a new member
     dreamitim.query(
@@ -57,6 +57,7 @@ app.post('/members', (req, res) => {
         }
       }
     );
+    next();
 })
 
 app.get('/requisition', async (req,res) => {
