@@ -43,22 +43,20 @@ app.get('/members', (req, res) => {
 app.post('/members', (req, res) => {
     const { member_name, member_phone, member_idcard } = req.body;
 
-    console.log(member_name);
-
-    // dreamitim.query(
-    //   'INSERT INTO `member` (`member_name`, `member_phone`, `member_idcard`) VALUES (?, ?, ?)',
-    //   [member_name, member_phone, member_idcard],
-    //   function (err, results, fields) {
-    //     if (err) {
-    //       console.error(err);
-    //       res.status(500).json({ message: 'Error' });
-    //       return;
-    //     } else {
-    //       console.log(results);
-    //       res.status(200).json({ message: 'Add Member Success' });
-    //     }
-    //   }
-    // );
+    dreamitim.query(
+      'INSERT INTO `member` (`member_name`, `member_phone`, `member_idcard`) VALUES (?, ?, ?)',
+      [member_name, member_phone, member_idcard],
+      function (err, results, fields) {
+        if (err) {
+          console.error(err);
+          res.status(500).json({ message: 'Error' });
+          return;
+        } else {
+          console.log(results);
+          res.status(200).json({ message: 'Add Member Success' });
+        }
+      }
+    );
 })
 
 app.get('/requisition', async (req,res) => {
