@@ -35,11 +35,96 @@ app.get('/members', (req, res) => {
             res.status(500).send('Error retrieving data from the database table members'); 
           } else {
             res.status(200).json(results);
-            // res.status(200).send(results);
           }
         }
-      );
+    );
 })
+
+app.get('/requisition', async (req,res) => {
+    const { date, name } = req.query;
+    let query = 'SELECT * FROM `requisition`';
+
+    if (date && name) {
+        query += ' WHERE `date` = ? AND `name` = ?';
+    } else if (date) {
+        query += ' WHERE `date` = ?';
+    } else if (name) {
+        query += ' WHERE `name` = ?';
+    }
+    //http://localhost:3000/requisition?date=2023-05-16&name=Rohit
+
+    try {
+        await new Promise((resolve, reject) => {
+            dreamitim.query(
+                query,
+                [date, name],
+                function (err, results, fields) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        const formattedResults = results.map((result) => ({
+                            id: result.id,
+                            date: result.date,
+                            name: result.name,
+                            nameitim: decodeURIComponent(result.nameitim),
+                            typeitim: result.typeitim,
+                            quantity: result.quantity,
+                        }));
+
+                        res.status(200).json(formattedResults);
+                        resolve();
+                    }
+                }
+            );
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error });
+    }
+
+})
+
+// app.get('/requisition', async (req, res) => {
+//     const { date, name } = req.query;
+//     let query = 'SELECT * FROM `requisition`';
+  
+//     if (date && name) {
+//       query += ' WHERE `date` = ? AND `name` = ?';
+//     } else if (date) {
+//       query += ' WHERE `date` = ?';
+//     } else if (name) {
+//       query += ' WHERE `name` = ?';
+//     }
+  
+//     try {
+//       await new Promise((resolve, reject) => {
+//         dreamitim.query(
+//           query,
+//           [date, name],
+//           function (err, results, fields) {
+//             if (err) {
+//               reject(err);
+//             } else {
+//               const formattedResults = results.map((result) => ({
+//                 id: result.id,
+//                 date: result.date,
+//                 name: result.name,
+//                 nameitim: decodeURIComponent(result.nameitim),
+//                 typeitim: result.typeitim,
+//                 quantity: result.quantity,
+//               }));
+  
+//               res.status(200).json(formattedResults);
+//               resolve();
+//             }
+//           }
+//         );
+//       });
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ message: 'Error' });
+//     }
+// });
 
 app.listen(process.env.PORT || 3000);
 // dreamitim.end()
