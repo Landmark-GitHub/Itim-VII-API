@@ -5,12 +5,13 @@ require('dotenv').config();
 
 const app = express();
 const dreamitim = mysql.createPool(process.env.DATABASE_URL)
+const corsOptions ={
+    origin:'http://localhost:3000', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
 
-app.use(cors());
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    next();
-});
+app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
     res.send('Welcome to DreamItim API')
