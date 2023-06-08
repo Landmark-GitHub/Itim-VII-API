@@ -55,7 +55,6 @@ app.post('/members', (req, res) => {
           console.log(results);
           res.status(200).json({ message: 'Add Member Success' });
         }
-
       }
     );
 })
