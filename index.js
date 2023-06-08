@@ -6,9 +6,13 @@ require('dotenv').config();
 const app = express();
 const dreamitim = mysql.createPool(process.env.DATABASE_URL)
 
+var corsOptions = {
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 // app.use(cors());
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
     res.send('Welcome to DreamItim API')
@@ -42,36 +46,8 @@ app.get('/members', (req, res) => {
     );
 })
 
-// app.post('/postMembers', cors(), async (req, res) => {
-//     try {
-//         res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app'); // เพิ่มหัวข้อ 'Access-Control-Allow-Origin' ในการตอบกลับ
-
-//         const { member_name, member_phone, member_idcard } = req.body;
-
-//         const result = await new Promise((resolve, reject) => {
-//             dreamitim.query(
-//                 'INSERT INTO `member` (`member_name`, `member_phone`, `member_idcard`) VALUES (?, ?, ?)',
-//                 [member_name, member_phone, member_idcard],
-//                 function (err, results, fields) {
-//                     if (err) {
-//                         reject(err);
-//                     } else {
-//                         resolve(results);
-//                     }
-//                 }
-//             );
-//         });
-//         console.log(result);
-//         res.status(200).json({ message: 'Add Member Success' });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: 'Error' });
-//     }
-// });
-
-
 app.post('/postMembers', cors(), (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app');
+    // res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app');
 
     const { member_name, member_phone, member_idcard } = req.body;
 
@@ -79,20 +55,19 @@ app.post('/postMembers', cors(), (req, res) => {
         'INSERT INTO `member` (`member_name`, `member_phone`, `member_idcard`) VALUES (?, ?, ?)',
         [member_name, member_phone, member_idcard],
         function (err, results, fields) {
-            // if (err) {
-            //     console.error(err);
-            //     res.status(500).json({ message: 'Error' });
-            //     return;
-            // } else {
-            //     console.log(results);
-            //     res.status(200).json({ message: 'Add Member Success' });
-            // }
-            console.log(results);
-            res.status(200).json({ message: 'Add Member Success' });
+            if (err) {
+                console.error(err);
+                res.status(500).json({ message: 'Error' });
+                return;
+            } else {
+                console.log(results);
+                res.status(200).json({ message: 'Add Member Success' });
+            }
+            // console.log(results);
+            // res.status(200).json({ message: 'Add Member Success' });
         }
     );
 });
-
 
 app.get('/requisition', async (req,res) => {
     const { date, name } = req.query;
