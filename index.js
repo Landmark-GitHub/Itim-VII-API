@@ -6,7 +6,7 @@ require('dotenv').config();
 const app = express();
 const dreamitim = mysql.createPool(process.env.DATABASE_URL)
 
-// app.use(cors());
+app.use(cors());
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     next();
