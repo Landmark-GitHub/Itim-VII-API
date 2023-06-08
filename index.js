@@ -26,5 +26,20 @@ app.get('/itim', (req, res) => {
       );
 })
 
+app.get('/members', (req, res) => {
+    dreamitim.query(
+        'SELECT * FROM `member`',
+        function (err, results, fields) {
+          if (err) {
+            console.error(err);
+            res.status(500).send('Error retrieving data from the database table members'); 
+          } else {
+            res.status(200).json(results);
+            // res.status(200).send(results);
+          }
+        }
+      );
+})
+
 app.listen(process.env.PORT || 3000);
 // dreamitim.end()
