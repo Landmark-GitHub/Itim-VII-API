@@ -8,7 +8,7 @@ const dreamitim = mysql.createPool(process.env.DATABASE_URL)
 
 
 // app.use(cors());
-// app.use(cors());
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.send('Welcome to DreamItim API')
@@ -43,7 +43,7 @@ app.get('/members', (req, res) => {
 })
 
 app.post('/postMembers', cors(), (req, res) => {
-    
+
     const { member_name, member_phone, member_idcard } = req.body;
 
     dreamitim.query(
