@@ -44,6 +44,25 @@ app.get('/members', (req, res) => {
     );
 })
 
+// app.post('/postMembers', (req, res) => {
+//     const { member_name, member_phone, member_idcard } = req.body;
+
+//     dreamitim.query(
+//       'INSERT INTO `member` (`member_name`, `member_phone`, `member_idcard`) VALUES (?, ?, ?)',
+//       [member_name, member_phone, member_idcard],
+//       function (err, results, fields) {
+//         if (err) {
+//           console.error(err);
+//           res.status(500).json({ message: 'Error' });
+//           return;
+//         } else {
+//           console.log(results);
+//           res.status(200).json({ message: 'Add Member Success' });
+//         }
+//       }
+//     );
+// })
+
 app.post('/postMembers', (req, res) => {
     const { member_name, member_phone, member_idcard } = req.body;
 
@@ -57,6 +76,7 @@ app.post('/postMembers', (req, res) => {
           return;
         } else {
           console.log(results);
+          res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app');
           res.status(200).json({ message: 'Add Member Success' });
         }
       }
