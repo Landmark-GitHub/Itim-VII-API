@@ -7,7 +7,10 @@ const app = express();
 const dreamitim = mysql.createPool(process.env.DATABASE_URL)
 
 
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+    origin: 'https://itim-vii.vercel.app'
+}));
 
 app.get('/', (req, res) => {
     res.send('Welcome to DreamItim API')
