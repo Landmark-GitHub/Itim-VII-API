@@ -168,7 +168,7 @@ app.get('/requisition', async (req,res) => {
 app.post('/postRequisition', async (req,res) => {
     const { date, name, nameitim, typeitim, quantity } = req.body;
 
-    if (!date || name || nameitim || typeitim || quantity) {
+    if (!date || !name || !nameitim || !typeitim || !quantity) {
         res.status(400).json({ message: 'Invalid request data' });
         return;
     }
