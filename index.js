@@ -7,7 +7,7 @@ const app = express();
 const dreamitim = mysql.createPool(process.env.DATABASE_URL)
 
 
-app.use(cors({origin: 'https://itim-1103cq9lk-landmark-github.vercel.app/'}));
+app.use(cors());
 // app.use((req, res, next) => {
 //     res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app'); // แทนที่ด้วยโดเมนของเว็บไซต์ที่เรียก API จริง
 //     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
