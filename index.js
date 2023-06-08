@@ -165,8 +165,8 @@ app.get('/requisition', async (req,res) => {
 
 })
 
-app.post('/postRequisition', (req,res) => {
-    try {
+app.post('/postRequisition', async (req,res) => {
+      try {
         const { date, name, nameitim, typeitim, quantity } = req.body;
 
         if (!date || name || nameitim || typeitim || quantity) {
@@ -174,7 +174,8 @@ app.post('/postRequisition', (req,res) => {
             return;
         }
 
-        dreamitim.query(
+        await new Promise((resolve, reject) => {
+          dreamitim.query(
             'INSERT INTO `requisition` (`date`,`name`,`nameitim`,`typeitim`,`quantity`) VALUES (?, ?, ?, ?, ?)',
             [date, name, nameitim, typeitim, quantity],
             function (err, results, fields) {
@@ -185,7 +186,7 @@ app.post('/postRequisition', (req,res) => {
               }
             }
           );
-
+        });
         res.status(200).json({ message: 'Add Quantity Success' });
       } catch (error) {
         console.error(error);
