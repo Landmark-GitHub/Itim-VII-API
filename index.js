@@ -243,24 +243,21 @@ app.get('/newItim', (req, res) => {
 })
 
 app.get('/oldItim', (req, res) => {
-    const {date, name } = req.body;
-  
-    let query = 'SELECT * ';
-  
-    if (date && name ) {
-      query += 'FROM `requisition` WHERE `date` = ? AND `name` = ?';
-    } else if (date && name) {
-      query += 'FROM `requisition` WHERE `date` = ? AND `name` = ?';
-    }
-  
-    dreamitim.query(query, [date, name], function (err, results, fields) {
-      if (err) {
+    const { date, name } = req.query;
+        
+    dreamitim.query(
+    `SELECT * FROM balance2 WHERE date < ? AND name = ? ORDER BY date DESC LIMIT 6`,
+    [date, name],
+    function (err, results, fields) {
+        if (err) {
         console.error(err);
-        return res.status(500).json({ error: 'Internal Server Error', date, name});
-      }
-      const formattedResults = JSON.stringify(results, null, 2); // Format the JSON response
-      return res.send(formattedResults);
-    });
+        res.status(500).json({ message: 'Internal server error' });
+        return;
+        }
+        
+        res.status(200).json(results);
+    }
+    );
 })
 
 app.listen(process.env.PORT || 3001);
