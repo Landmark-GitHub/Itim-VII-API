@@ -268,6 +268,10 @@ app.get('/oldItim', (req, res) => {
 
 app.get('/balanceItim', (req, res) => {
     const { date, name } = req.query;
+    if (!date|| !name) {
+        res.status(400).json({ message: 'Invalid request data' });
+        return;   
+    }
     dreamitim.query(
         'SELECT * FROM `balance2` WHERE `date` = ? AND `name` = ?',
     [date, name],
