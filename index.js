@@ -217,47 +217,46 @@ app.put('/putRequisition', (req, res) => {
     );
 })
 
-app.get('/typesItim', (req, res) => {
-    const {date, name, typeitim} = req.query;
-  
-    let query = 'SELECT ';
+app.get('/newItim', (req, res) => {
 
-    if (date && name && typeitim) {
-      query += 'name, typeItim, SUM(quantity) AS total_quantity FROM `requisition` WHERE `date` = ? AND `name` = ? AND `typeitim` = ?';
-    } else if (date && name) {
-      query += 'name, typeItim, SUM(quantity) AS total_quantity FROM `requisition` WHERE `date` = ? AND `name` = ? GROUP BY `typeitim`';
+    const {date, name} = req.query;
+    
+    let query = 'SELECT ';
+    
+    if (date && name ) {
+        query += 'name, typeItim, SUM(quantity) AS quantity FROM `requisition` WHERE `date` = ? AND `name` = ? GROUP BY `typeitim`';
     } else if (date) {
-      query += 'name, typeItim, SUM(quantity) AS total_quantity FROM `requisition` WHERE `date` = ? GROUP BY `name`, `typeitim`';
+        query += 'name, typeItim, SUM(quantity) AS quantity FROM `requisition` WHERE `date` = ? GROUP BY `name`, `typeitim`';
+    } else if (!date || !name) {
+        query += 'date, name, typeItim, SUM(quantity) AS quantity FROM `requisition` GROUP BY `date`, `name`, `typeitim`';
     }
-  
-    dreamitim.query(query, [date, name, typeitim], function (err, results, fields) {
-      if (err) {
+    
+    dreamitim.query(query, [date, name], function (err, results, fields) {
+        if (err) {
         console.error(err);
-        return res.status(500).json({ error: 'Internal Server Error', date, name, typeitim });
-      }
-      const formattedResults = JSON.stringify(results, null, 2); // Format the JSON response
-      return res.send(formattedResults);
+        return res.status(500).json({ error: 'Internal Server Error', date, name});
+        }
+        // const formattedResults = JSON.stringify(results, null, 2); // Format the JSON response
+        return res.status(200).json(results);
     });
+
 })
 
-app.get('/newItim', (req, res) => {
-    // const { params } = req.query;
-    const {date, name, typeitim} = req.query;
+app.get('/oldItim', (req, res) => {
+    const {date, name } = req.body;
   
-    let query = 'SELECT ';
+    let query = 'SELECT * ';
   
-    if (date && name && typeitim) {
-      query += 'name, typeItim, SUM(quantity) AS total_quantity FROM `requisition` WHERE `date` = ? AND `name` = ? AND `typeitim` = ?';
+    if (date && name ) {
+      query += 'FROM `requisition` WHERE `date` = ? AND `name` = ?';
     } else if (date && name) {
-      query += 'name, typeItim, SUM(quantity) AS total_quantity FROM `requisition` WHERE `date` = ? AND `name` = ? GROUP BY `typeitim`';
-    } else if (date) {
-      query += 'name, typeItim, SUM(quantity) AS total_quantity FROM `requisition` WHERE `date` = ? GROUP BY `name`, `typeitim`';
+      query += 'FROM `requisition` WHERE `date` = ? AND `name` = ?';
     }
   
-    dream_itim.query(query, [date, name, typeitim], function (err, results, fields) {
+    dreamitim.query(query, [date, name], function (err, results, fields) {
       if (err) {
         console.error(err);
-        return res.status(500).json({ error: 'Internal Server Error', date, name, typeitim });
+        return res.status(500).json({ error: 'Internal Server Error', date, name});
       }
       const formattedResults = JSON.stringify(results, null, 2); // Format the JSON response
       return res.send(formattedResults);
