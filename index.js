@@ -331,4 +331,76 @@ app.put('/putBalance', (req,res) => {
     )
 })
 
+//Table DryIce
+app.get('/getDryice', (req, res) => {
+
+    const { date, name } = req.query
+
+    let query = 'SELECT * FROM `dryice`'
+
+    if (date && name) {
+        query += ' WHERE date=? AND name=?';
+    } else if (date) {
+        query += ' WHERE date=?';
+    } else if (name) {
+        query += ' WHERE name=?';
+    }
+
+    dreamitim.query(query, [date, name], 
+        function (err, results, fields) {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Error' });
+            return;
+        } else {
+            res.status(200).json(results)
+        }
+    })
+})
+
+app.post('/postDryice', (req, res) => {
+    const { date, name, quantity} = req.body
+
+    if (!date|| !name|| !quantity) {
+        res.status(400).json({ message: 'Invalid request data' });
+        return;   
+    }
+
+    dreamitim.query(
+        'INSERT INTO `dryice` (`date`, `name`, `quantity`) VALUES (?, ?, ?)',
+    [date, name, quantity],
+    function (err, results, fields) {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Error' });
+            return;
+        } else {
+            res.status(200).json(results)
+        }
+    })
+})
+
+app.put('/putDryice', (req,res) => {
+    const { date, name, quantity } = req.body;
+
+    if (!date|| !name|| !quantity) {
+        res.status(400).json({ message: 'Invalid request data' });
+        return;   
+    }
+    dreamitim.query(
+        'UPDATE `dryice` SET `quantity` = ? WHERE `date` = ? AND `name` = ?',
+        [quantity, date, name],
+        function (err, results, fields) {
+            if (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Error' });
+            return;
+            } else {
+            console.log(results);
+            res.status(200).json({ message: 'Update Success' });
+            }
+        }
+    )
+})
+
 app.listen(process.env.PORT || 3001);
