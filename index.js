@@ -18,6 +18,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to DreamItim API')
 })
 
+//itimDB
 app.get('/itim', (req, res) => {
     dreamitim.query(
         'SELECT * FROM `itim`',
@@ -32,6 +33,7 @@ app.get('/itim', (req, res) => {
       );
 })
 
+//memberDB
 app.get('/members', (req, res) => {
     dreamitim.query(
         'SELECT * FROM `member`',
@@ -120,6 +122,7 @@ app.delete('/deleteMember/:id', async (req, res) => {
     }
 });
 
+//requisitionDB
 app.get('/requisition', async (req,res) => {
     const { date, name } = req.query;
     let query = 'SELECT * FROM `requisition`';
@@ -217,6 +220,7 @@ app.put('/putRequisition', (req, res) => {
     );
 })
 
+//get Requisition
 app.get('/newItim', (req, res) => {
 
     const {date, name} = req.query;
@@ -242,6 +246,8 @@ app.get('/newItim', (req, res) => {
 
 })
 
+//BalanceDB
+//get Balance
 app.get('/oldItim', (req, res) => {
     const { date, name } = req.query;
         
@@ -258,6 +264,67 @@ app.get('/oldItim', (req, res) => {
         res.status(200).json(results);
     }
     );
+})
+
+app.get('/balanceItim', (req, res) => {
+    const { date, name } = req.query;
+    dreamitim.query(
+        'SELECT * FROM `balance2` WHERE `date` = ? AND `name` = ?',
+    [date, name],
+    function (err, results, fields) {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Error' });
+            return;
+        } else {
+            res.status(200).json(results)
+        }
+    })
+})
+
+app.post('/postBalance', (req, res) => {
+    const {date, name, typeitim, quantity} = req.body;
+    if (!date|| !name|| !typeitim|| !quantity) {
+        res.status(400).json({ message: 'Invalid request data' });
+        return;   
+    }
+    // insert a new member
+    dreamitim.query(
+      'INSERT INTO `balance2` (`date`, `name`, `typeitim`, `quantity`) VALUES (?, ?, ?, ?)',
+      [date, name, typeitim, quantity ],
+      function (err, results, fields) {
+        if (err) {
+          console.error(err);
+          res.status(500).json({ message: 'Error' });
+          return;
+        } else {
+          console.log(results);
+          res.status(200).json({ message: 'Save Success' });
+        }
+      }
+    );
+})
+
+app.put('/putBalance', (req,res) => {
+    const { date, name, typeitim, quantity } = req.body;
+    if (!date|| !name|| !typeitim|| !quantity) {
+        res.status(400).json({ message: 'Invalid request data' });
+        return;   
+    }
+      dreamitim.query(
+        'UPDATE `balance2` SET `quantity` = ? WHERE `date` = ? AND `name` = ? AND `typeitim` = ?',
+        [quantity, date, name, typeitim],
+        function (err, results, fields) {
+          if (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Error' });
+            return;
+          } else {
+            console.log(results);
+            res.status(200).json({ message: 'Update Success' });
+          }
+        }
+    )
 })
 
 app.listen(process.env.PORT || 3001);
