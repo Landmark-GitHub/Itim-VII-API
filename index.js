@@ -35,17 +35,35 @@ app.get('/itim', (req, res) => {
 
 //memberDB
 app.get('/members', (req, res) => {
-    dreamitim.query(
-        'SELECT * FROM `member`',
-        function (err, results, fields) {
-          if (err) {
-            console.error(err);
-            res.status(500).send('Error retrieving data from the database table members'); 
-          } else {
-            res.status(200).json(results);
-          }
-        }
-    );
+
+    const {name} = req.query;
+
+    if (!name) {
+        dreamitim.query(
+            'SELECT * FROM `member`',
+            function (err, results, fields) {
+              if (err) {
+                console.error(err);
+                res.status(500).send('Error retrieving data from the database table members'); 
+              } else {
+                res.status(200).json(results);
+              }
+            }
+        );
+    } else {
+        dreamitim.query(
+            'SELECT * FROM `member` WHERE `member_name` = ?', [name],
+            function (err, results, fields) {
+              if (err) {
+                console.error(err);
+                res.status(500).send('Error retrieving data from the database table members'); 
+              } else {
+                res.status(200).json(results);
+              }
+            }
+        );
+    }
+
 })
 
 app.post('/postMembers', (req, res) => {
