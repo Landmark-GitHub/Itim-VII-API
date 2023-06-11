@@ -67,17 +67,17 @@ app.get('/members', (req, res) => {
 })
 
 app.post('/postMembers', (req, res) => {
-    //res.setHeader('Access-Control-Allow-Origin', 'https://itim-vii.vercel.app');
-    const { member_name, member_phone, member_idcard } = req.body;
 
-    if (!member_name || !member_phone || !member_idcard) {
+    const { member_name, member_phone, member_idcard ,member_type } = req.body;
+
+    if (!member_name || !member_phone || !member_idcard || !member_type ) {
         res.status(400).json({ message: 'Invalid request data' });
         return;
     }
 
     dreamitim.query(
-        'INSERT INTO `member` (`member_name`, `member_phone`, `member_idcard`) VALUES (?, ?, ?)',
-        [member_name, member_phone, member_idcard],
+        'INSERT INTO `member` (`member_name`, `member_phone`, `member_idcard`, `member_type`) VALUES (?, ?, ?, ?)',
+        [member_name, member_phone, member_idcard, member_type],
         function (err, results, fields) {
             if (err) {
                 console.error(err);
